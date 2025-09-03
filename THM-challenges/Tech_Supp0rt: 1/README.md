@@ -173,4 +173,40 @@ Let's look at what we have on the server:
 
 The Subrion directory is now useless; it has served its purpose. The test directory is not something we are going to be looking at, it is useless as well. 
 
-While running a few scans, such as capabilities (```getcap -r / 2>/dev/null```)
+While running a few scans, such as capabilities (```getcap -r / 2>/dev/null```) and suid files (```find / -perm -04000 -ls 2>/dev/null```), I have noticed that the user **www-data** can not be used for LPE.
+
+A new user has to be found; let's look at /etc/passwd:
+
+![/etc/passwd File](assets/passwd-file.png)
+
+There! We have a new user who is eligble for login - **scamsite**. The only way we can access this user is to pick one of the passwords already available to us.
+
+I have tried using Scam2021, but to no avail. The only other directory we can find credentials at - is wordpress. Lets go back to that directory and find the credentials.
+
+![Listing WordPress](assets/wp-ls.png)
+
+The file wp-config.php usually contains credentials for the admin account. Let's inspect it:
+
+![WordPress Config](assets/wp-config.png)
+
+And there it is, we can see that the password for user support in the SQL database is **ImAScammerLOL!123!**.
+
+Since the reverse shell I spawned is not interactive, I will use SSH to connect to that user.
+
+![SSH Connection](assets/ssh-connection.png)
+
+Nice, it worked. Now, let's take a look at `sudo -l` since we know the password for this user.
+
+![SUDO -l](assets/sudo-l.png)
+
+Interesting, we are allowed to use iconv with root privileges. Let's see if we can use that for LPE via https://gtfobins.github.io:
+
+![GTFOBINS](assets/gtfobins.png)
+
+Perfect! This shows that we can use **iconv** to read files that require elevated privileges (for example, our file root.txt). Let's use the exploit shown on GTFOBins to read the file /root/root.txt.
+
+Do not forget to use sudo!
+
+![LPE](assets/LPE.jpg)
+
+Thank you for visiting!)
