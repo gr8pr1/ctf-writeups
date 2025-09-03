@@ -33,3 +33,14 @@ This command lists all the available shares (-L) on the target as well as supres
 
 ![Samba Scan](assets/smb-scan.png)
 
+The websrv share is exactly what we are looking for here. Lets connect to the share and inspect what it contains. For this purpose I used the same command, but removed the -L key to simply connect to the share instead of listing:
+
+```bash
+smbclient //10.201.31.100/websvr -N
+```
+
+![Samba Share](assets/smb-share.png)
+
+
+And there it is! Using simple commands - ls and get, I have spotted the file enter.txt and downloaded it for later inspection.
+
