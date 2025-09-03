@@ -82,7 +82,13 @@ We are greeted with the defualt apache index.html page:
 
 ![Apache Page](assets/apache-page.png)
 
-Since we already know that a subrion panel exists, lets visit that page and use the credentials we have already acquired:
+Now lets try and view the subrion using /subrion:
+
+![Subrion Issue](assets/subrion-issue.png)
+
+I assume this is the issue the admin was talking about. The CMS is misconfigured which leads to a redirection of the home page.
+
+Since we already know that a subrion panel exists and that it should not have the smae issue, lets visit that page and use the credentials we have already acquired:
 
 ![Subrion Logoin](assets/subrion-login.png)
 
