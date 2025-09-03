@@ -42,5 +42,9 @@ smbclient //10.201.31.100/websvr -N
 ![Samba Share](assets/smb-share.png)
 
 
-And there it is! Using simple commands - ls and get, I have spotted the file enter.txt and downloaded it for later inspection.
+And there it is! Using simple commands - ls and get, we have spotted the file enter.txt and downloaded it for later inspection.
+
+Let us take a look at what is inside the file we have just downloaded.
+
+![Enter.txt File](assets/enter.txt.png)
 
