@@ -95,3 +95,26 @@ Since we already know that a subrion panel exists and that it should not have th
 
 ![Subrion Panel](assets/subrion-panel.png)
 
+Now, if we go onto the System ---> System on the left dock we can see that the site url is misconfigured:
+
+![Subrion Panel](assets/subrion-misconfig.png)
+
+Fix the issue by inserting the correct IP address instead of the faulty one. This will be crucial for latter steps.
+
+The issue with redirection is now fixed, lets proceed.
+
+Now we have to find a way to plant a reverse shell to get ahold of the system. There are mutliple ways of achieving that:
+- Metasploit framework - can quickly discover a vulnerability and exploit it.
+- Finding the vulnerability manually, but using a pre-written exploit - finding the vulnerability in the web and using a script written to exploit that vulnerability.
+- Manually finding the vulnerability and exploiting it.
+
+The method we are going to be using is the last one. For simple CTFs like the one we are doing, performing a completely manual pentest seems to me like a much better option for self-development.
+
+Uploading a reverse shell and launching it could be done in two ways on Subrion. First way is creating a new php page with a code instructing it to send a interactive bash shell to your session (IP + port). I have failed to achieve the result this way, since Subrion was really hesitant about importing php code onto a page, even simple obfuscation did not work. 
+
+The second way would be to upload a php script from personal files onto the CMS and using the /uploads directory to open it up. Here things are also a little tricky, most likely due to the Apache configuration. I believe the file .htaccess is blocking any php files from running, or it could be the Subrion itself. Nevertheless, while trying to find a way to overcome this issue, I found this on one of descriptions of Subrion CMS vulnerabilities:
+
+**/panel/uploads in Subrion CMS 4.2.1 allows remote attackers to execute arbitrary PHP code via a .pht or .phar file, because the .htaccess file omits these.**
+
+This confirmed my deduction regarding .htaccess block and also gave us a way to create the plant the php code into the uploads directory and afterwards successfully launch it.
+
