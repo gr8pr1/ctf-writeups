@@ -165,11 +165,10 @@ And this is the result we get on our device:
 
 ![Connection Established](assets/nc-connection.png)
 
-We have successfully deployed a reverse shell, now we need to perform an LPE (Local Privilege Escalation) to gain access to root.txt.
+We have successfully deployed a reverse shell. Now we need to perform a Local Privilege Escalation (LPE) to gain access to root.txt.
 
-
-Lets look at what we have on the server:
+Let's look at what we have on the server:
 
 ![Listing Server](assets/listing-server.png)
 
-
+The Subrion directory is now useless; it has served its purpose.
