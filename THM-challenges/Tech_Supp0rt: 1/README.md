@@ -63,7 +63,7 @@ After running multiple tests on the string and searching for a good decypher too
 
 This tool can be used to encode/decode various inputs such as base64, base32, hexdump and many more. However, the most interesting tool on this website is 'Magic', which really connects to the hint left to us by the admin - "Cooked with a **magic** formula".
 
-Using that tool on the key we found gives us the following result:
+Using that tool on the key we found, gives us the following result:
 
 ![CyberChef](assets/CyberChef.png)
 
@@ -72,4 +72,20 @@ So here are the credentials for the Subrion panel:
 - **Username: admin**
 - **Password: Scam2021**
 
+---
+
+## Gaining Access
+
+Now, that we have the credentials for the Subrion panel, let us go and see the web page for ourselves. First lets head to http://10.201.31.100/. 
+
+We are greeted with the defualt apache index.html page:
+
+![Apache Page](assets/apache-page.png)
+
+Since we already know that a subrion panel exists, lets visit that page and use the credentials we have already acquired:
+
+![Subrion Logoin](assets/subrion-login.png)
+
+
+![Subrion Panel](assets/subrion-panel.png)
 
