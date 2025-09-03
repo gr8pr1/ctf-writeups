@@ -171,4 +171,6 @@ Let's look at what we have on the server:
 
 ![Listing Server](assets/listing-server.png)
 
-The Subrion directory is now useless; it has served its purpose.
+The Subrion directory is now useless; it has served its purpose. The test directory is not something we are going to be looking at, it is useless as well. 
+
+While running a few scans, such as capabilities (```bash getcap -r / 2>/dev/null```)
