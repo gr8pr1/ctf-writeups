@@ -56,4 +56,20 @@ The samba share is cleared now. Now we will see what we have on the HTTP front, 
 This is all very important information. The admin gave us the location to one of the panels - the subrion panels. Under that he also included the credentials for subrion:
 - **admin:7sKvntXdPEJaxazce9PXi24zaFrLiKWCk**
 
-However it
+However it also states the credentials were 'cooked with a magical formula', which probably implies encoding of some kind. Upon a first look we can conclude that the key is not base64 or base32 encoded, since they typically contain a signature '=' or '==' sign at the end.
+
+After running multiple tests on the string and searching for a good decypher tool, I found this one:
+- https://gchq.github.io/CyberChef
+
+This tool can be used to encode/decode various inputs such as base64, base32, hexdump and many more. However, the most interesting tool on this website is 'Magic', which really connects to the hint left to us by the admin - "Cooked with a **magic** formula".
+
+Using that tool on the key we found gives us the following result:
+
+![CyberChef](assets/CyberChef.png)
+
+
+So here are the credentials for the Subrion panel:
+- **Username: admin**
+- **Password: Scam2021**
+
+
