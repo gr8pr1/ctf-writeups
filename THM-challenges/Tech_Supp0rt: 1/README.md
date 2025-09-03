@@ -30,3 +30,5 @@ This command connects lists all the available shares (-L) on the target as well 
 smbclient -L //10.201.31.100/ -N
 ```
 
+![Samba Scan](assets/smb-scan.png)
+
