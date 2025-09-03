@@ -22,13 +22,14 @@ The scan has identified 4 open ports:
 - 139: Legacy SMB file sharing
 - 445: Current standard for SMB file sharing
 
-The detailed nmap scan also revealed that the security for Samba is relatively weak and can be accessed in guest mode (no authenticaion), so I will start with searching through the samba shared files.
-
-This command lists all the available shares (-L) on the target as well as supresses the password prompt, since we already know that a connection can be established with a guest account:
+The detailed nmap scan also revealed that the security for Samba is relatively weak and can be accessed in guest mode (no authenticaion), so I will start with searching through the samba shared files. For this we will use this smbclient command:
 
 ```bash
 smbclient -L //10.201.31.100/ -N
 ```
+
+This command lists all the available shares (-L) on the target as well as supresses the password prompt, since we already know that a connection can be established with a guest account:
+
 
 ![Samba Scan](assets/smb-scan.png)
 
