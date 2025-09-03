@@ -11,4 +11,4 @@ This repository contains writeups and solutions for various Capture The Flag (CT
 To share knowledge, approaches, and solutions for educational and research purposes in cybersecurity.
 
 ## Disclaimer
-All content is for educational use only. Please respect the rules and guidelines of each CTF platform.
+All content is for educational use only.
