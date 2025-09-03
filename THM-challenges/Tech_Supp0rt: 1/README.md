@@ -48,3 +48,12 @@ Let us take a look at what is inside the file we have just downloaded.
 
 ![Enter.txt File](assets/enter.txt.png)
 
+The samba share is cleared now. Now we will see what we have on the HTTP front, but first lets assess the txt file. The file describes 'goals' for the admin, they include:
+- Setting up a fake popup website
+- Fix the subrion from the /panel, as there is an issue with the /subrion
+- Edit the wordpress webiste
+
+This is all very important information. The admin gave us the location to one of the panels - the subrion panels. Under that he also included the credentials for subrion:
+- **admin:7sKvntXdPEJaxazce9PXi24zaFrLiKWCk**
+
+However it
