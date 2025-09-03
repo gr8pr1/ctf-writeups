@@ -24,7 +24,7 @@ The scan has identified 4 open ports:
 
 The detailed nmap scan also revealed that the security for Samba is relatively weak and can be accessed in guest mode (no authenticaion), so I will start with searching through the samba shared files.
 
-This command connects lists all the available shares (-L) on the target as well as supresses the password prompt, since we have established that a connection can be established with a guest account:
+This command lists all the available shares (-L) on the target as well as supresses the password prompt, since we have established that a connection can be established with a guest account:
 
 ```bash
 smbclient -L //10.201.31.100/ -N
