@@ -99,22 +99,101 @@ frackzip -u -D -p /path/to/wordlist backup.zip
 
 ![Fcrackzip](assets/fcrackzip.png)
 
-There it is! The passkey to the archive is **zxcvbnm**. Let`s unzip it:
+There it is! The passkey to the archive is **zxcvbnm**. Let's unzip it:
 
 ![unzipping](assets/unzip.png)
 
 ![List Hades](assets/ls-hades.png)
 
-If we list the /home/hades directory, we can see that it contains a .ssh directory containing:
+Listing the /home/hades directory reveals a .ssh directory containing:
 - **authorized_keys** file: Stores public SSH keys that are allowed to authenticate and log in to the user account without a password.
-- **flag.txt**: One of the flags for the task
-- **hint.txt**: A hint we are going to take a look at
+- **flag.txt**: One of the challenge flags
+- **hint.txt**: A hint we will examine
 - **id_rsa**: The private SSH key used for secure authentication.
 - **id_rsa.pub**: The public SSH key corresponding to id_rsa. It can be added to authorized_keys on remote systems to allow key-based authentication.
 
+Viewing the `authorized_keys` file, we observe the following:
 
-There is the first flag!
+![authorized_keys](assets/authorized_keys.png)
+
+The comment at the end indicates that these ID files belong to the user `hades`, and the hostname of the machine is `hell`. I will use `hell` as the hostname for all following steps. You can do the same or continue using the IP address; it makes no difference.
+
+**Note:** If you wish to use the hostname option, make sure to add it to your `/etc/hosts` file.
+
+Here is the first flag.
 
 ![flag.txt](assets/flag.txt.png)
 
+Let's take a look at the hint.
 
+![hint.txt](assets/hint.png)
+
+The range 2500-4500 likely refers to possible SSH port numbers. Since we have the private key (`id_rsa`) and its public counterpart (`id_rsa.pub`) matches the entry in `authorized_keys`, we can authenticate to the server via SSH without a password. Our next step is to identify which port within the 2500-4500 range is running the SSH service.
+
+There are multiple ways to approach this. We could use `nmap` with the `-sV` option to identify services running on the 2000 ports in the specified range, but this would take a considerable amount of time. Tools like `medusa` and `hydra` are commonly used for brute-forcing SSH passwords; however, in our case, we already have the private key (`id_rsa`), and these tools are not intended for identifying SSH ports.
+
+In my opinion, the best way to proceed is to create our own script. This script should:
+- Attempt to establish an SSH connection using the private key (`id_rsa`) to each port in the 2500-4500 range.
+- Check for lines such as 'Connection reset' to omit the output of unsuccessful connections.
+- Report which port successfully establishes an SSH connection.
+
+Here is the script I made with the help of AI:
+
+```bash
+#!/bin/bash
+
+# Configuration
+HOST="hell"
+USER="hades"
+KEY_FILE="id_rsa"
+START_PORT=2500
+END_PORT=4500
+THREADS=50
+
+# Set proper key permissions
+chmod 600 "$KEY_FILE"
+
+echo "🔍 Scanning ports $START_PORT to $END_PORT for abnormal SSH responses..."
+echo "Target: $USER@$HOST"
+echo "--------------------------------------------"
+
+# Function to test a single port
+test_port() {
+    local port=$1
+    local output
+    local last_line
+    
+    # Capture SSH output with timeout
+    output=$(timeout 4 ssh -o BatchMode=yes -o ConnectTimeout=3 -o StrictHostKeyChecking=no \
+                         -i "$KEY_FILE" -p $port $USER@$HOST 2>&1)
+    
+    # Get the last line
+    last_line=$(echo "$output" | tail -1)
+    
+    # Check if last line does NOT contain typical connection reset/refused messages
+    if ! echo "$last_line" | grep -q "Connection reset by\|Connection refused\|Connection closed\|No route to host"; then
+        if [ -n "$last_line" ]; then
+            echo "Port $port: $last_line"
+        else
+            echo "Port $port: No typical error message (different response)"
+        fi
+    fi
+}
+
+export -f test_port
+export HOST USER KEY_FILE
+
+# Scan all ports in parallel, wait for all to complete
+seq $START_PORT $END_PORT | xargs -I {} -P $THREADS bash -c 'test_port "$@"' _ {}
+
+echo "--------------------------------------------"
+echo "Scan completed. Check above for ports with unusual responses."
+```
+
+**Note:** This script was also added to the assets directory.
+
+The script also uses threads to decrease the wait time, as scanning 2000 ports can take a long time.
+
+**Keep in mind:** For this script to work properly, you must specify all parameters in the configuration settings correctly. For example, if the `id_rsa` file is not located in the same directory as this script, provide the full path to the key file; otherwise, it will not work.
+
+Now let's launch the script and observe the output:
