@@ -13,7 +13,7 @@ As soon as we join the challenge, we are advised to "Start at port 1337 and enum
 
 We can use telnet to establish a session to the machine:
 
-![Telnet 1337](assets/telnet-1337.png)
+![Telnet 1337](assets/images/telnet-1337.png)
 
 The message states that we must find a trollface hiding in the banners of sessions of the first 100 port. Banners are the messages printed as the last line before the "Connection close by foreign host" message. So, let's create a script printing those lines from the connection of the first 100 ports. The script shall accomplish that through the following steps:
 - Connect via telnet to the session (IP + port number)
@@ -49,20 +49,20 @@ echo "Scan completed."
 
 Create a simple .sh file and add the rights to execute it using the command `chmod +x NAME_OF_YOUR_SCRIPT.sh`. Afterwards, launch it ./NAME_OF_YOUR_SCRIPT.sh, and this is what you are going to see:
 
-![Enumeration Scan](assets/enum-script-scan.png)
+![Enumeration Scan](assets/images/enum-script-scan.png)
 
 
 As we can see, one of the banners tells us to "go to port 12345", so let's do that:
 
 
-![Port 12345](assets/12345-scan.png)
+![Port 12345](assets/images/12345-scan.png)
 
 The banner of the session with port 12345 informs us about the NFS share available on the server. We can locate and mount the share using `nfs-utils` package, if you do not already have it, download it.
 
 
 Using the showmount command with the key -e (Shows the export lists of the NFS server) we can list the available shares:
 
-![ShowMount](assets/showmount.png)
+![ShowMount](assets/images/showmount.png)
 
 The output indicates that the share /home/nfs is available, so let`s mount it to our device:
 - Create a directory which will be used to mount the NFS share:
@@ -84,12 +84,12 @@ ls /mnt/nfs
 umount /mnt/nfs
 ```
 
-![NFS Mount](assets/nfs-mount.png)
+![NFS Mount](assets/images/nfs-mount.png)
 
 
 The only file located on the share was `backup.zip`. Trying to unzip the archive, we can see that it is encrypted with a passkey:
 
-![backup.zip](assets/backup.png)
+![backup.zip](assets/images/backup.png)
 
 Let's bruteforce our way in. There are multiple tools for that, however I used `fcrackzip` with a `rockyou.txt` wordlist. If you wish to use the same tool, here is the command:
 
@@ -97,13 +97,13 @@ Let's bruteforce our way in. There are multiple tools for that, however I used `
 frackzip -u -D -p /path/to/wordlist backup.zip
 ```
 
-![Fcrackzip](assets/fcrackzip.png)
+![Fcrackzip](assets/images/fcrackzip.png)
 
 There it is! The passkey to the archive is **zxcvbnm**. Let's unzip it:
 
-![unzipping](assets/unzip.png)
+![unzipping](assets/images/unzip.png)
 
-![List Hades](assets/ls-hades.png)
+![List Hades](assets/images/ls-hades.png)
 
 Listing the /home/hades directory reveals a .ssh directory containing:
 - **authorized_keys** file: Stores public SSH keys that are allowed to authenticate and log in to the user account without a password.
@@ -114,7 +114,7 @@ Listing the /home/hades directory reveals a .ssh directory containing:
 
 Viewing the `authorized_keys` file, we observe the following:
 
-![authorized_keys](assets/authorized_keys.png)
+![authorized_keys](assets/images/authorized_keys.png)
 
 The comment at the end indicates that these ID files belong to the user `hades`, and the hostname of the machine is `hell`. I will use `hell` as the hostname for all following steps. You can do the same or continue using the IP address; it makes no difference.
 
@@ -122,11 +122,11 @@ The comment at the end indicates that these ID files belong to the user `hades`,
 
 Here is the first flag.
 
-![flag.txt](assets/flag.txt.png)
+![flag.txt](assets/images/flag.txt.png)
 
 Let's take a look at the hint.
 
-![hint.txt](assets/hint.png)
+![hint.txt](assets/images/hint.png)
 
 The range 2500-4500 likely refers to possible SSH port numbers. Since we have the private key (`id_rsa`) and its public counterpart (`id_rsa.pub`) matches the entry in `authorized_keys`, we can authenticate to the server via SSH without a password. Our next step is to identify which port within the 2500-4500 range is running the SSH service.
 
@@ -198,7 +198,7 @@ The script uses threads to reduce the wait time, as scanning 2000 ports can take
 
 Now, let's launch the script and observe the output:
 
-![SSH Scan](assets/ssh-scan.png)
+![SSH Scan](assets/images/ssh-scan.png)
 
 After the script completes, we are left with one port: 3333.
 
@@ -208,7 +208,7 @@ Let's connect to that port using the key file:
 ssh -i id_rsa -p 3333 hades@hell
 ```
 
-![SSH Connection](assets/ssh-con.png)
+![SSH Connection](assets/images/ssh-con.png)
 
 This is not your ordinary console. When trying to execute simple SHell command you may observe that it gives out an error. This is because this is an IRB (Interactive Ruby) shell. After doing some research, I found a simple command to give us a bash shell:
 
@@ -218,11 +218,11 @@ system("/bin/bash")
 
 And there we have it, a familiar looking bash shell!
 
-![IRB Exit](assets/irb-exit.png)
+![IRB Exit](assets/images/irb-exit.png)
 
 A simple `ls` command reveals the `user.txt` file - the second flag for this challenge.
 
-![user.txt](assets/user.txt.png)
+![user.txt](assets/images/user.txt.png)
 
 Now, to get the last flag, we must probably perform a Local Privilege Escalation (LPE). After checking /etc/passwd and SUID files, I found nothing. However, upon reviewing the available capability binaries I found this:
 
