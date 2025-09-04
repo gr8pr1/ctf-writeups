@@ -224,14 +224,28 @@ A simple `ls` command reveals the `user.txt` file - the second flag for this cha
 
 ![user.txt](assets/user.txt.png)
 
-Now, to get the last flag, we must probably perform an LPE (Local Privilege Escalation). After checking /etc/passwd and SUID files, I found nothing. However, upon reviewing the available capability binaries I found this:
+Now, to get the last flag, we must probably perform a Local Privilege Escalation (LPE). After checking /etc/passwd and SUID files, I found nothing. However, upon reviewing the available capability binaries I found this:
 
 ```bash
 getcap -r / 2>/dev/null
 ```
 
-![Capabilities](assets/getcap.png)
+![Capabilities](assets/images/getcap.png)
 
 `tar` being on there, definitely seems odd to me. Let's check GTFObins:
 
-[htts://gtfobins.github.io](https://gtfobins.github.io/)
+[https://gtfobins.github.io](https://gtfobins.github.io/)
+
+![GTFObins](assets/images/gtfobins.png)
+
+With the following command, we can abuse the `tar` capabilities to read the `/root/root.txt` file:
+
+```bash
+tar xf "/root/root.txt" -I '/bin/sh -c "cat 1>&2"'
+```
+
+![root.txt](assets/images/root.txt.png)
+
+And there we have it—the final flag, completing the challenge!
+
+**Thanks for visiting!**

