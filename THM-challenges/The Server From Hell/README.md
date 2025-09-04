@@ -43,3 +43,14 @@ done
 echo "----------------------------------------"
 echo "Scan completed."
 ```
+
+Create a simple .sh file and add the rights to execute it using the command `chmod +x NAME_OF_YOUR_SCRIPT.sh`. Afterwards, launch it ./NAME_OF_YOUR_SCRIPT.sh, and this is what you are going to see:
+
+![Enumeration Scan](assets/enum-script-scan.png)
+
+
+As we can see, one of the banners tells us to "go to port 12345", so let's do that:
+
+
+![Port 12345](assets/12345-scan.png)
+
