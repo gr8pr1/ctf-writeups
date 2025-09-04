@@ -171,7 +171,7 @@ test_port() {
     last_line=$(echo "$output" | tail -1)
     
     # Check if last line does NOT contain typical connection reset/refused messages
-    if ! echo "$last_line" | grep -q "Connection reset by\|Connection refused\|Connection closed\|No route to host"; then
+    if ! echo "$last_line" | grep -q "Connection reset by\|Connection refused\|Connection closed\|No route to host\|invalid format\|timed out"; then
         if [ -n "$last_line" ]; then
             echo "Port $port: $last_line"
         else
@@ -192,8 +192,21 @@ echo "Scan completed. Check above for ports with unusual responses."
 
 **Note:** This script was also added to the assets directory.
 
-The script also uses threads to decrease the wait time, as scanning 2000 ports can take a long time.
+The script uses threads to reduce the wait time, as scanning 2000 ports can take a long time.
 
 **Keep in mind:** For this script to work properly, you must specify all parameters in the configuration settings correctly. For example, if the `id_rsa` file is not located in the same directory as this script, provide the full path to the key file; otherwise, it will not work.
 
-Now let's launch the script and observe the output:
+Now, let's launch the script and observe the output:
+
+![SSH Scan](assets/ssh-scan.png)
+
+After the script completes, we are left with one port: 3333.
+
+Let's connect to that port using the key file:
+
+```bash
+ssh -i id_rsa -p 3333 hades@hell
+```
+
+![SSH Connection](assets/ssh-con.png)
+

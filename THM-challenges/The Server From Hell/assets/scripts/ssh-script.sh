@@ -29,7 +29,7 @@ test_port() {
     last_line=$(echo "$output" | tail -1)
     
     # Check if last line does NOT contain typical connection reset/refused messages
-    if ! echo "$last_line" | grep -q "Connection reset by\|Connection refused\|Connection closed\|No route to host"; then
+    if ! echo "$last_line" | grep -q "Connection reset by\|Connection refused\|Connection closed\|No route to host\|invalid format\|timed out"; then
         if [ -n "$last_line" ]; then
             echo "Port $port: $last_line"
         else
