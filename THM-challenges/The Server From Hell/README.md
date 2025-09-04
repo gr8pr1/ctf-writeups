@@ -75,4 +75,8 @@ mount -t nfs server_ip:/home/nfs /mnt/nfs
 ls /mnt/nfs
 ```
 - Copy the files in the share to your working directory.
+
 - Unmount the share
+```bash
+umount /mnt/nfs
+```
