@@ -54,3 +54,10 @@ As we can see, one of the banners tells us to "go to port 12345", so let's do th
 
 ![Port 12345](assets/12345-scan.png)
 
+The banner of the session with port 12345 informs us about the NFS share available on the server. We can locate and mount the share using `nfs-utils` package, if you do not already have it, download it.
+
+
+Using the showmount command with the key -e (Shows the export lists of the NFS server) we can list the available shares:
+
+![ShowMount](assets/showmount.png)
+
