@@ -112,3 +112,9 @@ If we list the /home/hades directory, we can see that it contains a .ssh directo
 - **id_rsa**: The private SSH key used for secure authentication.
 - **id_rsa.pub**: The public SSH key corresponding to id_rsa. It can be added to authorized_keys on remote systems to allow key-based authentication.
 
+
+There is the first flag!
+
+![flag.txt](assets/flag.txt.png)
+
+
