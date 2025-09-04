@@ -80,3 +80,23 @@ ls /mnt/nfs
 ```bash
 umount /mnt/nfs
 ```
+
+![NFS Mount](assets/nfs-mount.png)
+
+
+The only file located on the share was `backup.zip`. Trying to unzip the archive, we can see that it is encrypted with a passkey:
+
+![backup.zip](assets/backup.png)
+
+Let's bruteforce our way in. There are multiple tools for that, however I used `fcrackzip` with a `rockyou.txt` wordlist. If you wish to use the same tool, here is the command:
+
+```bash
+frackzip -u -D -p /path/to/wordlist backup.zip
+```
+
+![Fcrackzip](assets/fcrackzip.png)
+
+There it is! The passkey to the archive is **zxcvbnm**. Let`s unzip it:
+
+![unzipping](assets/unzip.png)
+
