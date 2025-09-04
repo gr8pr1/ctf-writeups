@@ -61,3 +61,18 @@ Using the showmount command with the key -e (Shows the export lists of the NFS s
 
 ![ShowMount](assets/showmount.png)
 
+The output indicates that the share /home/nfs is available, so let`s mount it to our device:
+- Create a directory which will be used to mount the NFS share:
+```bash
+mkdir /mnt/nfs
+```
+- Mount the share to your device:
+```bash
+mount -t nfs server_ip:/home/nfs /mnt/nfs
+```
+- List the shared directory:
+```bash
+ls /mnt/nfs
+```
+- Copy the files in the share to your working directory.
+- Unmount the share
