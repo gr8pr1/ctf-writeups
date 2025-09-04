@@ -210,3 +210,28 @@ ssh -i id_rsa -p 3333 hades@hell
 
 ![SSH Connection](assets/ssh-con.png)
 
+This is not your ordinary console. When trying to execute simple SHell command you may observe that it gives out an error. This is because this is an IRB (Interactive Ruby) shell. After doing some research, I found a simple command to give us a bash shell:
+
+```bash
+system("/bin/bash")
+```
+
+And there we have it, a familiar looking bash shell!
+
+![IRB Exit](assets/irb-exit.png)
+
+A simple `ls` command reveals the `user.txt` file - the second flag for this challenge.
+
+![user.txt](assets/user.txt.png)
+
+Now, to get the last flag, we must probably perform an LPE (Local Privilege Escalation). After checking /etc/passwd and SUID files, I found nothing. However, upon reviewing the available capability binaries I found this:
+
+```bash
+getcap -r / 2>/dev/null
+```
+
+![Capabilities](assets/getcap.png)
+
+`tar` being on there, definitely seems odd to me. Let's check GTFObins:
+
+[htts://gtfobins.github.io](https://gtfobins.github.io/)
