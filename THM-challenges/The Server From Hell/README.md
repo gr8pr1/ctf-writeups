@@ -44,6 +44,9 @@ echo "----------------------------------------"
 echo "Scan completed."
 ```
 
+**Note:** I uploaded the script into the assets directory.
+
+
 Create a simple .sh file and add the rights to execute it using the command `chmod +x NAME_OF_YOUR_SCRIPT.sh`. Afterwards, launch it ./NAME_OF_YOUR_SCRIPT.sh, and this is what you are going to see:
 
 ![Enumeration Scan](assets/enum-script-scan.png)
@@ -99,4 +102,13 @@ frackzip -u -D -p /path/to/wordlist backup.zip
 There it is! The passkey to the archive is **zxcvbnm**. Let`s unzip it:
 
 ![unzipping](assets/unzip.png)
+
+![List Hades](assets/ls-hades.png)
+
+If we list the /home/hades directory, we can see that it contains a .ssh directory containing:
+- **authorized_keys** file: Stores public SSH keys that are allowed to authenticate and log in to the user account without a password.
+- **flag.txt**: One of the flags for the task
+- **hint.txt**: A hint we are going to take a look at
+- **id_rsa**: The private SSH key used for secure authentication.
+- **id_rsa.pub**: The public SSH key corresponding to id_rsa. It can be added to authorized_keys on remote systems to allow key-based authentication.
 
