@@ -15,3 +15,31 @@ We can use telnet to establish a session to the machine:
 
 ![Telnet 1337](assets/telnet-1337.png)
 
+The message states that we must find a trollface hiding in the banners of sessions of the first 100 port. Banners are the messages printed as the last line before the "Connection close by foreign host" message. So, let's create a script printing those lines from the connection of the first 100 ports. The script shall accomplish that through the following steps:
+- Connect via telnet to the session (IP + port number)
+- Sanitize the output, so that only the banner is printed
+- Do the same for the next port until the port 100 is reached
+
+Using AI, I created the following script:
+
+```bash
+#!/bin/bash
+
+TARGET_IP="IP"
+MAX_PORT=100
+
+echo "Scanning ports 1 to $MAX_PORT on $TARGET_IP..."
+echo "----------------------------------------"
+
+for port in $(seq 1 $MAX_PORT); do
+    echo -n "port $port: "
+    
+    output=$(telnet $TARGET_IP $port)
+    echo $output | tail -n 1
+    
+    sleep 0.1
+done
+
+echo "----------------------------------------"
+echo "Scan completed."
+```
